@@ -74,13 +74,17 @@
     //Initialize SVG layer in Leaflet (works for leaflet-0.7.3)
     //map._initPathRoot() ;
     //map['_initPathRoot']() ;
-    //L.svg().addTo(map);
+    L.svg().addTo(map);
 
 
     var transform = d3.geo.transform({point: projectPoint}), //d3 manipuler des svg (vectoriel)
     path = d3.geo.path().projection(transform);
 
 
+    var svg = d3.select(map.getPanes().overlayPane).select("svg");
+    //add "leaflet-zoom-hide" class to SVG container for turning off zoom
+    defs = svg.append("defs");
+    clipPath = defs.append("clipPath").attr("id", "clipPath");
 
 
 
@@ -113,12 +117,6 @@
         var type = e.layerType,
                 layer = e.layer;
         drawnItems.addLayer(layer);
-        
-        var svg = d3.select(map.getPanes().overlayPane).select("svg");
-        //add "leaflet-zoom-hide" class to SVG container for turning off zoom
-        defs = svg.append("defs");
-        clipPath = defs.append("clipPath").attr("id", "clipPath");
-
 
     });
 
