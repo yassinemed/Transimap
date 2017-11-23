@@ -3,6 +3,8 @@
 <head>
     <title>Transimap</title>
 
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+
     <link rel="stylesheet" href="src/leaflet.css"/>
     <link rel="stylesheet" href="src/leaflet.draw.css"/>
 
@@ -61,6 +63,29 @@
     overlay.getContainer().style.display = "none";
     var drawnItems = new L.FeatureGroup();
     map.addLayer(drawnItems);
+
+
+    //Convert Leaflet geometries to D3 geometries
+    function projectPoint(x, y) {
+    var point = map.latLngToLayerPoint(new L.LatLng(y, x));
+    this.stream.point(point.x, point.y);
+    };
+
+    //Initialize SVG layer in Leaflet (works for leaflet-0.7.3)
+    //map._initPathRoot() ;
+    //map['_initPathRoot']() ;
+    //var svg = L.svg().addTo(map);
+
+    var transform = d3.geo.transform({point: projectPoint}), //d3 manipuler des svg (vectoriel)
+    path = d3.geo.path().projection(transform);
+
+    var svg = d3.select("leaflet-pane leaflet-overlay-pane"),
+    // add "leaflet-zoom-hide" class to SVG container for turning off zoom
+    defs = svg.append("defs"),
+    clipPath = defs.append("clipPath").attr("id", "clipPath");
+
+
+
 
     // Set the title to show on the polygon button
     L.drawLocal.draw.toolbar.buttons.polygon = 'Draw a polygon';
