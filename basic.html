@@ -88,7 +88,6 @@
 
 
 
-
     // Set the title to show on the polygon button
     L.drawLocal.draw.toolbar.buttons.polygon = 'Draw a polygon';
 
@@ -115,8 +114,19 @@
 
     map.on(L.Draw.Event.CREATED, function (e) {
         var type = e.layerType,
-                layer = e.layer;
+            layer = e.layer;
         drawnItems.addLayer(layer);
+
+        var geoJSONlayer = layer.toGeoJSON();
+        geoJSONlayer.properties.id = 'l' + layer._leaflet_id;
+
+        clipPath.append("path")
+            .attr("id", 'l' + layer._leaflet_id)
+            .datum(geoJSONlayer)
+            .attr("d", path)
+            .attr("fill", "white")
+            .attr("opacity", 0.95); //change opacity to control masking
+        clip();
 
     });
 
@@ -132,6 +142,22 @@
     L.DomUtil.get('changeColor').onclick = function () {
         drawControl.setDrawingOptions({rectangle: {shapeOptions: {color: '#004a80'}}});
     };*/
+
+    
+    function clip() {
+    var clippingPaths =  clipPath.selectAll("path");
+    clippingPaths.attr("d", path);
+
+    if (clippingPaths.size() > 0) {
+        overlay.getContainer().style.display = "inline";
+        overlay.getContainer().style.clipPath = 'url(#clipPath)';
+        overlay.getContainer().style.WebkitClipPath = 'url(#clipPath)';
+    } else {
+        overlay.getContainer().style.display = "none";
+        overlay.getContainer().style.clipPath = 'none';
+        overlay.getContainer().style.WebkitClipPath = 'none';
+    };
+};
 
 </script>
 </body>
