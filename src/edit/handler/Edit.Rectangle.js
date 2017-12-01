@@ -87,6 +87,8 @@ L.Edit.Rectangle = L.Edit.SimpleShape.extend({
 		this._moveMarker.setLatLng(bounds.getCenter());
 
 		this._map.fire(L.Draw.Event.EDITRESIZE, { layer: this._shape });
+
+		
 	},
 
 	_getCorners: function () {

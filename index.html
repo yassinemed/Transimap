@@ -91,11 +91,16 @@
             polyline: true,
             polygon: true,
             circle: true,
-            marker: false
+            marker: false,
+            circlemarker:false
         },
         edit: {
             featureGroup: drawnItems,
-            remove: true
+            remove: true,
+            buffer : {
+                replacePolylines: false,
+                separateBuffer: false,
+            },
         }
     });
     map.addControl(drawControl);
@@ -118,7 +123,7 @@
                 .attr("d", path)
                 .attr("fill", "white")
                 .attr("opacity", 0.95); //change opacity to control masking
-            if(type != 'polyline'){
+            if(e.layerType != 'polyline'){ //e.layerType
                 clip();
             }
         }else{
@@ -133,11 +138,14 @@
                 .attr("d", path)
                 .attr("fill", "white")
                 .attr("opacity", 0.95); //change opacity to control masking
-            if(type != 'polyline'){
+            alert(e.layerType);
+            if(e.layerType != 'polyline'){
                 clip();
             }
         }
     });
+
+
     map.on(L.Draw.Event.EDITED, function (e) {
         var layers = e.layers;
         layers.eachLayer(function (layer) {
@@ -156,12 +164,13 @@
         clipPath.select("#l" + layer._leaflet_id).remove();
     });
 
-    //clip();
+    map.on(zoom)
 
     });
 
-    function clip() {
-        var clippingPaths =  clipPath.selectAll("path");
+    function clip(id) {
+
+        var clippingPaths =  clipPath.select(path);
         clippingPaths.attr("d", path);
 
         if (clippingPaths.size() > 0) {
@@ -174,6 +183,7 @@
             overlay.getContainer().style.WebkitClipPath = 'none';
         };
     };
+
 
 </script>
 </body>
