@@ -164,13 +164,13 @@
         clipPath.select("#l" + layer._leaflet_id).remove();
     });
 
-    map.on(zoom)
+   
 
     });
 
-    function clip(id) {
+    function clip() {
 
-        var clippingPaths =  clipPath.select(path);
+        var clippingPaths =  clipPath.selectAll("path");
         clippingPaths.attr("d", path);
 
         if (clippingPaths.size() > 0) {
@@ -183,6 +183,9 @@
             overlay.getContainer().style.WebkitClipPath = 'none';
         };
     };
+
+    map.on('move', clip);
+    map.on('viewreset', clip);
 
 
 </script>
